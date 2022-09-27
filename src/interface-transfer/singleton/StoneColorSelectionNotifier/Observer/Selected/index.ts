@@ -16,7 +16,6 @@ export default class ColorSelection extends Observer {
   }
 
   async update(notifier: Notifier, e: any) {
-    console.log('color');
     this.navigate(`/${ModeSelectionNotifier.getInstance().getMode()}`);
   }
 }

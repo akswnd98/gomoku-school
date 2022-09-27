@@ -16,6 +16,7 @@ export default class ModeSelection extends Notifier {
   }
 
   async notify (e: ModeType) {
+    this.mode = e;
     await super.notify(e);
   }
 }
