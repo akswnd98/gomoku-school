@@ -1,15 +1,4 @@
-import { useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
-import { useEffect } from 'react';
-import Singleton from '../../interface-transfer/singleton/StandardModeSelectionNotifier';
-import Observer from '../../interface-transfer/singleton/StandardModeSelectionNotifier/Observer';
-
-export type Props = {
-  modeName: string;
-  boardSizeText: string;
-  ruleDescription: string;
-  refUrl: string;
-};
 
 const Root = styled.div`
   width: 250px;
@@ -41,18 +30,9 @@ const RuleDescription = styled.div`
   font-weight: bold;
 `;
 
-export default function ModeSelectBox (props: Props) {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    Singleton.getInstance().registerObserver(new Observer({ navigate }));
-  }, []);
-
-  return (
-    <Root onClick={() => Singleton.getInstance().notify(props.refUrl)}>
-      <ModeName>{props.modeName}</ModeName>
-      <BoardSizeText>{props.boardSizeText}</BoardSizeText>
-      <RuleDescription>{props.ruleDescription}</RuleDescription>
-    </Root>
-  );
-}
+export {
+  Root,
+  ModeName,
+  BoardSizeText,
+  RuleDescription,
+};
