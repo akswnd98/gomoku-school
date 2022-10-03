@@ -18,16 +18,16 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "baseUrl": "./",
+    "paths": {
+      "@icons/*": ["./icons/*"],
+      "@assets/*": ["./assets/*"],
+      "@src/*": ["./src/*"],
+      "@models/*": ["./models/*"]
+    },
   },
   "include": [
     "src"
   ],
-  "baseUrl": "./",
-  "paths": {
-    "@/icons/*": ["./icons/*"],
-    "@/assets/*": ["./assets/*"],
-    "@/src/*": ["./src/*"],
-    "@/models/*": ["./models/*"]
-  },       
 }

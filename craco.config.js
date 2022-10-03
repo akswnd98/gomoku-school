@@ -9,9 +9,8 @@ module.exports = {
   webpack: {
     alias: {
       '@assets': path.resolve(__dirname, 'src/assets'),
-      '@assets/*': path.resolve(__dirname, 'src/assets'),
-      '@src/*': path.resolve(__dirname, 'src'),
-      '@models/*': path.resolve(__dirname, 'models'),
+      '@src': path.resolve(__dirname, 'src'),
+      '@models': path.resolve(__dirname, 'models'),
     },
     plugins: [
       new WebpackPwaManifest(manifest),

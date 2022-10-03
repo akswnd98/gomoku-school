@@ -6,9 +6,6 @@ import Standard from './ModeSelectBox/Standard';
 import Freestyle from './ModeSelectBox/Freestyle';
 import Black from './StoneColorSelectBox/Black';
 import White from './StoneColorSelectBox/White';
-import { useNavigate } from 'react-router-dom';
-import StoneColorSelectionNotifier from '../interface-transfer/singleton/StoneColorSelectionNotifier';
-import ColorSelection from '../interface-transfer/singleton/StoneColorSelectionNotifier/Observer/Selected';
 
 const Root = styled.div`
   width: 100%;
@@ -29,11 +26,9 @@ const BoxWrapper = styled.div`
 
 export default function Home () {
   const [selectPhase, setSelectPhase] = useState('mode');
-  const navigate = useNavigate();
 
   useEffect(() => {
     ModeSelectionNotifier.getInstance().registerObserver(new ModeSelectionObserver({ setSelectPhase }));
-    StoneColorSelectionNotifier.getInstance().registerObserver(new ColorSelection({ navigate }));
   }, []);
 
   return (

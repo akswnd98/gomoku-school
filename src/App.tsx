@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
 import { Route, Routes } from 'react-router-dom';
-import FreestyleMode from './FreestyleMode';
+import Freestyle from './Freestyle';
 import Home from './Home';
-import StandardMode from './StandardMode';
+import Standard from './Standard';
 
 const Root = styled.div`
   width: 100%;
@@ -14,8 +14,8 @@ export default function App() {
     <Root>
       <Routes>
         <Route path='' element={<Home />} />
-        <Route path='standard-mode' element={<StandardMode />} />
-        <Route path='freestyle-mode' element={<FreestyleMode />} />
+        <Route path='standard' element={<Standard />} />
+        <Route path='freestyle' element={<Freestyle />} />
       </Routes>
     </Root>
   );

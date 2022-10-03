@@ -1,4 +1,6 @@
+export type State = 'playing' | 'black-win' | 'white-win' | 'draw';
+
 export default abstract class Game {
   abstract boardSize: number;
-  abstract checkEnd (boardState: number[][]): boolean;
+  abstract checkState (boardState: number[][]): State;
 }

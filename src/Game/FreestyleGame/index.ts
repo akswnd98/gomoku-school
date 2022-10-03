@@ -3,35 +3,52 @@ import Game from '..';
 export default class FreestyleGame extends Game {
   boardSize: number = 20;
 
-  checkEnd (boardState: number[][]) {
-    this.checkAlgorithms.forEach((check) => {
-      if (check(boardState)) {
-        return true;
+  checkState (boardState: number[][]) {
+    for (let check of this.checkAlgorithms) {
+      const checked = check(boardState);
+      if (checked !== 'playing') {
+        return checked;
       }
-    });
-    return false;
+    }
+    if (this.checkFull(boardState)) {
+      return 'draw';
+    } else {
+      return 'playing';
+    }
+  }
+
+  checkFull (boardState: number[][]) {
+    for (let i = 0; i < this.boardSize; i++) {
+      for (let j = 0; j < this.boardSize; j++) {
+        if (boardState[i][j] === 0) {
+          return false;
+        }
+      }
+    }
+    return true;
   }
 
   private checkAlgorithms = [
-    this.checkHorizontal,
-    this.checkVertical,
-    this.checkDiagonalDec,
-    this.checkDiagonalInc,
+    (boardState: number[][]) => this.checkHorizontal(boardState),
+    (boardState: number[][]) => this.checkVertical(boardState),
+    (boardState: number[][]) => this.checkDiagonalDec(boardState),
+    (boardState: number[][]) => this.checkDiagonalInc(boardState),
   ];
 
   private checkHorizontal (boardState: number[][]) {
-    for (let  i = 0; i < this.boardSize; i++) {
+    for (let i = 0; i < this.boardSize; i++) {
       for (let j = 0; j < this.boardSize - 5; j++) {
         let line = [];
         for (let k = 0; k < 5; k++) {
           line.push(this.getStone(boardState, j + k, i));
         }
-        if (this.check5(line)) {
-          return true;
+        const checked = this.check5(line);
+        if (checked !== 'playing') {
+          return checked;
         }
       }
     }
-    return false;
+    return 'playing';
   }
 
   private checkVertical (boardState: number[][]) {
@@ -41,12 +58,13 @@ export default class FreestyleGame extends Game {
         for (let k = 0; k < 5; k++) {
           line.push(this.getStone(boardState, i, j + k));
         }
-        if (this.check5(line)) {
-          return true;
+        const checked = this.check5(line);
+        if (checked !== 'playing') {
+          return checked;
         }
       }
     }
-    return false;
+    return 'playing';
   }
 
   private checkDiagonalDec (boardState: number[][]) {
@@ -56,12 +74,13 @@ export default class FreestyleGame extends Game {
         for (let k = 0; k < 5; k++) {
           line.push(this.getStone(boardState, i + k, j + k));
         }
-        if (this.check5(line)) {
-          return true;
+        const checked = this.check5(line);
+        if (checked !== 'playing') {
+          return checked;
         }
       }
     }
-    return false;
+    return 'playing';
   }
 
   private checkDiagonalInc (boardState: number[][]) {
@@ -71,12 +90,13 @@ export default class FreestyleGame extends Game {
         for (let k = 0; k < 5; k++) {
           line.push(this.getStone(boardState, i + k, j - k));
         }
-        if (this.check5(line)) {
-          return true;
+        const checked = this.check5(line);
+        if (checked !== 'playing') {
+          return checked;
         }
       }
     }
-    return false;
+    return 'playing';
   }
 
   private getStone (boardState: number[][], x: number, y: number) {
@@ -88,10 +108,14 @@ export default class FreestyleGame extends Game {
   }
 
   private check5 (line: number[]) {
-    let ret = true
+    let isEnd = line[0] !== 0;
     for (let i = 0; i < 4; i++) {
-      ret &&= line[i] === line[i + 1];
+      isEnd &&= line[i] === line[i + 1];
     }
-    return ret;
+    if (isEnd) {
+      return line[0] === 1 ? 'black-win' : 'white-win';
+    } else {
+      return 'playing';
+    }
   }
 }

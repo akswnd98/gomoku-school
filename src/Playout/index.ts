@@ -1,45 +1,39 @@
 import Game from '../Game';
-import StandardGame from '../Game/StandardGame';
-import Player from '../Player';
-import HumanPlayer from '../Player/HumanPlayer';
+import PlayerSet from './PlayerSet';
 import BoardUpdateNotifier from '../interface-transfer/Notifier/BoardUpdate';
 
+export type ConstructorParam = {
+  game: Game;
+  playerSet: PlayerSet;
+  notifier: BoardUpdateNotifier;
+};
+
 export default class Playout {
-  game: Game = new StandardGame();
-  blackPlayer: Player = new HumanPlayer();
-  whitePlayer: Player = new HumanPlayer();
-  curBoardState: number[][] = Array(this.game.boardSize).fill(0).map(() => Array(this.game.boardSize).fill(0));
-  notifier: BoardUpdateNotifier = new BoardUpdateNotifier({ observers: [] });
+  game: Game;
+  playerSet: PlayerSet;
+  notifier: BoardUpdateNotifier;
+  curBoardState: number[][]
   curTurn: 'black' | 'white' = 'black';
 
-  setGame (game: Game) {
-    this.game = game;
+  constructor (payload: ConstructorParam) {
+    this.game = payload.game
+    this.playerSet = payload.playerSet;
+    this.notifier = payload.notifier;
     this.curBoardState = Array(this.game.boardSize).fill(0).map(() => Array(this.game.boardSize).fill(0));
-  }
-
-  setBlackPlayer (player: Player) {
-    this.blackPlayer = player;
-  }
-
-  setWhitePlayer (player: Player) {
-    this.whitePlayer = player;
-  }
-
-  setNotifier (notifier: BoardUpdateNotifier) {
-    this.notifier = notifier;
   }
 
   async step () {
     if (this.curTurn === 'black') {
-      const action = await this.blackPlayer.step(this.curBoardState);
+      const action = await this.playerSet.blackPlayer.step(this.curBoardState);
       this.curBoardState[action[1]][action[0]] = 1;
     } else {
-      const action = await this.whitePlayer.step(this.curBoardState);
+      const action = await this.playerSet.whitePlayer.step(this.curBoardState);
       this.curBoardState[action[1]][action[0]] = 2;
     }
-    this.notifier.notify({ name: 'update-board', boardState: this.curBoardState });
-    if (this.game.checkEnd(this.curBoardState)) {
-      this.notifier.notify({ name: 'game-end' });
+    await this.notifier.notify({ name: 'update-board', boardState: this.curBoardState });
+    const state = this.game.checkState(this.curBoardState);
+    if (state !== 'playing') {
+      this.notifier.notify({ name: 'game-end', state });
     }
     this.curTurn = this.curTurn === 'black' ? 'white' : 'black';
   }

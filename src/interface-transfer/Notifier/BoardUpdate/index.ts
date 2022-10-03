@@ -1,10 +1,20 @@
+import { State } from '@src/Game';
 import Notifier from '..';
 
-export type EventNameType = 'update-board' | 'game-end' | 'clear';
+export type EventType = UpdateBoardEventType | GameEndEventType | ClearEventType;
 
-export type EventType = {
-  name: EventNameType;
-  boardState?: number[][];
+export type UpdateBoardEventType = {
+  name: 'update-board';
+  boardState: number[][];
+};
+
+export type GameEndEventType = {
+  name: 'game-end';
+  state: State;
+};
+
+export type ClearEventType = {
+  name: 'clear';
 };
 
 export default class BoardUpdateNotifier extends Notifier {
